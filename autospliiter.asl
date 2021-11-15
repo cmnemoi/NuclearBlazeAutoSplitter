@@ -22,7 +22,7 @@ start{
 }
 
 reset{
-    return current.frame_timer == Int32.MaxValue;
+    return current.frame_timer == -1;
 }
 update{
     print(""+current.frame_timer);
