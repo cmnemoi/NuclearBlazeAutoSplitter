@@ -16,7 +16,7 @@ gameTime {
 init
 {
 
-    //MD5 checksum code adapted from Zment's Defy Gravity and R30hedron Dead Cells autosplitter
+    //MD5 checksum code adapted from Zment's Defy Gravity and R30hedron's Dead Cells autosplitters
     byte[] exeMD5HashBytes = new byte[0];
     using (var md5 = System.Security.Cryptography.MD5.Create())
     {
@@ -37,7 +37,7 @@ init
         default :
             version = "Unknown Version";
             MessageBox.Show(timer.Form,
-                "Dead Cells Autosplitter Error:\n\n"
+                "Nuclear Blaze Autosplitter Error:\n\n"
                 + "This autosplitter does not support this game version.\n"
                 + "Please contact Evian (@Evian#6930 on Discord)\n"
                 + "with the following string and the game's version number.\n\n"
