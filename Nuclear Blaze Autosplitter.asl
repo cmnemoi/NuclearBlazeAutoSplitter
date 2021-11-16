@@ -53,21 +53,34 @@ init
     vars.saves_folder = ((modules.First().FileName).Replace("\\","/")).Replace("dx64/NuclearBlaze.exe","save/");
     
     // we are reading the game saves at game start, which contains current level ID
-    vars.old_reader_1 = new StreamReader(new FileStream(  (vars.saves_folder+"slot0.dnsav") , FileMode.Open, FileAccess.Read, FileShare.ReadWrite));
-    vars.old_save_1 = vars.old_reader_1.ReadLine();
-    vars.old_reader_2 = new StreamReader(new FileStream( (vars.saves_folder+"slot1.dnsav") , FileMode.Open, FileAccess.Read, FileShare.ReadWrite));
-    vars.old_save_2 = vars.old_reader_2.ReadLine();
-    vars.old_reader_3 = new StreamReader(new FileStream( (vars.saves_folder+"slot2.dnsav") , FileMode.Open, FileAccess.Read, FileShare.ReadWrite));
-    vars.old_save_3 = vars.old_reader_3.ReadLine();
+    vars.save_reader = new List<StreamReader>();
+    vars.old_save = new List<string>();
+    vars.new_save = new List<string>();
+
+    for(var i = 0; i < 3; i++) 
+    {
+        vars.save_reader.Add(new StreamReader(new FileStream(vars.saves_folder+"slot" + i.ToString() + ".dnsav", FileMode.Open, FileAccess.Read, FileShare.ReadWrite)));
+        vars.old_save.Add(vars.save_reader[i].ReadLine());
+        vars.new_save.Add(vars.old_save[i]);
+    }
+
+    vars.levelId = "Intro_forest";
+    vars.old_levelId = "Intro_forest";
+    vars.current_save_id = -1;
 }
 
 //always running
 //when returning true, starts the timer
 start{
     //when starting the timer, we are making sure the two versions of the save files are the same
-    vars.old_save_1 = vars.new_save_1;
-    vars.old_save_2 = vars.new_save_2;
-    vars.old_save_3 = vars.new_save_3;
+    for(var i = 0; i < 3; i++) 
+    {
+        vars.old_save[i] = vars.new_save[i];
+    }
+
+    vars.levelId = "Intro_forest";
+    vars.old_levelId = "Intro_forest";
+    vars.current_save_id = -1;
 
     return old.frame_timer == 0 && current.frame_timer > 0;
 }
@@ -80,47 +93,74 @@ reset{
 
 //always running
 update{
-    
     //while the game is running we are reading the saves
-    vars.new_reader_1 = new StreamReader(new FileStream( (vars.saves_folder+"slot0.dnsav") , FileMode.Open, FileAccess.Read, FileShare.ReadWrite) );
-    vars.new_save_1 = vars.new_reader_1.ReadLine();
-    vars.new_reader_2 = new StreamReader(new FileStream( (vars.saves_folder+"slot1.dnsav") , FileMode.Open, FileAccess.Read, FileShare.ReadWrite) );
-    vars.new_save_2 = vars.new_reader_2.ReadLine();
-    vars.new_reader_3 = new StreamReader(new FileStream( (vars.saves_folder+"slot2.dnsav") , FileMode.Open, FileAccess.Read, FileShare.ReadWrite));
-    vars.new_save_3 = vars.new_reader_3.ReadLine();
- 
+    if (vars.current_save_id == -1) {
+        for(var i = 0; i < 3; i++) 
+        {
+            // Discard buffered data and seek to the start of the stream before reading it
+            vars.save_reader[i].DiscardBufferedData();
+            vars.save_reader[i].BaseStream.Seek(0, System.IO.SeekOrigin.Begin);
+            vars.new_save[i] = vars.save_reader[i].ReadLine();
+
+            if (vars.old_save[i] != vars.new_save[i]) {
+                vars.current_save_id = i;
+                print("Current save id found: " + vars.current_save_id.ToString());
+            }
+        }
+    }
+
+    if (vars.current_save_id != -1) {
+        vars.old_save[vars.current_save_id] = vars.new_save[vars.current_save_id];
+
+        // Discard buffered data and seek to the start of the stream before reading it
+        vars.save_reader[vars.current_save_id].DiscardBufferedData();
+        vars.save_reader[vars.current_save_id].BaseStream.Seek(0, System.IO.SeekOrigin.Begin);
+        vars.new_save[vars.current_save_id] = vars.save_reader[vars.current_save_id].ReadLine();
+
+        if (vars.old_save[vars.current_save_id] != vars.new_save[vars.current_save_id]) {
+            // Read Nuclear Blaze save format
+            var LEVEL_ID_LABEL = "y7:levelId";
+            var current_save = vars.new_save[vars.current_save_id];
+            int idx_lvlId_label = current_save.IndexOf(LEVEL_ID_LABEL);
+            if (idx_lvlId_label > -1) {
+                if(current_save[idx_lvlId_label + LEVEL_ID_LABEL.Length] != 'n') {
+                    // +10 to skip the y7:levelId, +1 to skip the y
+                    var save_substring = current_save.Substring(idx_lvlId_label + LEVEL_ID_LABEL.Length + 1); 
+                    // save_substring should look like this "12:Intro_foresty11:gameVersiony5:1.0.3y4:diffoy[...]"
+                    var idx_lvlId_label_length = save_substring.IndexOf(":"); // in that example, should give us 2
+                    var levelId_length_str = save_substring.Substring(0, idx_lvlId_label_length); // in that example, should give us "12"
+                    int levelId_length = Int32.Parse(levelId_length_str); // should be 12
+                    
+                    vars.old_levelId = vars.levelId;
+                    vars.levelId = save_substring.Substring(idx_lvlId_label_length + 1, levelId_length); // should be Intro_forest
+                    print("Save changed");
+                }
+            }
+        }
+    }
 }
 
 //always running
 //when returning true, split
 split{
-    //if one of the save file changed, that means current level ID has been updated -> we changed level
-    var save_1_changed = vars.old_save_1 != vars.new_save_1;
-    var save_2_changed = vars.old_save_2 != vars.new_save_2;
-    var save_3_changed = vars.old_save_3 != vars.new_save_3;
+    if (vars.current_save_id == -1) {
+        return;
+    }
 
-    //if we are in the last screen, the save file contains the string Ending
-    var last_level_1 = vars.new_save_1.Contains("Ending");
-    var last_level_2 = vars.new_save_2.Contains("Ending");
-    var last_level_3 = vars.new_save_3.Contains("Ending");
+    //if level changed, we copy the new save into the old one then we split
+    if (!vars.old_levelId.Equals(vars.levelId)) 
+    {
+        print("SPLIT - Current level id: " + vars.levelId.ToString() + ", old level id: " + vars.old_levelId.ToString());
+        vars.old_levelId = vars.levelId;
+        return true;
+    }
 
     //if we are far enough in the right, it means we touched the final door
     var touched_door = current.X_position > 24;
 
-    
-    //if level changed, we copy the new save into the old one then we split
-    if(save_1_changed || save_2_changed || save_3_changed){
-        vars.old_save_1 = vars.new_save_1;
-        vars.old_save_2 = vars.new_save_2;
-        vars.old_save_3 = vars.new_save_3;
-        
-        return true;
-    }
-
     //if we are in the last level AND we are far enough in the right, we split (last split)
-    if( (last_level_1 && touched_door) || (last_level_2 && touched_door) || (last_level_3 && touched_door)   ){
+    if (vars.levelId.Equals("Ending") && touched_door) {
+        print("SPLIT - Ending level id: " + vars.levelId.ToString() + ", touched door");
         return true;
     }
-    
-    
 }
