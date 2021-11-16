@@ -43,7 +43,7 @@ init
                 + "with the following string and the game's version number.\n\n"
                 + "MD5Hash: " + MD5Hash + "\n\n"
                 + "Defaulting to the most recent known memory addesses...",
-                  "Dead Cells Autosplitter Error",
+                  "Nuclear Blaze Autosplitter Error",
                   MessageBoxButtons.OK,
                   MessageBoxIcon.Error);
             break;
