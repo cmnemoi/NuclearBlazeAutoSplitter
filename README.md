@@ -22,7 +22,8 @@ The following are implemented:
 Please forward any feedback, questions, or concerns to Evian on Discord (@Evian#6930).
 
 Special thanks to:
-
+    
+    dotneB for fixing a bug if the player has saves in the last level, inconsistant splits and optimizing the code.
     R30hedron for helping me finding the right adresses and for this documentation.
     Deepnight for his hints which help finding the right adresses.
 
