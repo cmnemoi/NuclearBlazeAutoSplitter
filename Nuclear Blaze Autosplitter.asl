@@ -13,13 +13,15 @@ gameTime {
    
 init
 {
+
+    vars.saves_folder = ((modules.First().FileName).Replace("\\","/")).Replace("dx64/NuclearBlaze.exe","save/");
     
-    //we are reading the game saves at game starting, which contains current level ID
-    vars.old_reader_1 = new StreamReader(new FileStream("C:/Program Files (x86)/Steam/steamapps/common/Nuclear Blaze/save/slot0.dnsav", FileMode.Open, FileAccess.Read, FileShare.ReadWrite));
+    // we are reading the game saves at game start, which contains current level ID
+    vars.old_reader_1 = new StreamReader(new FileStream(  (vars.saves_folder+"slot0.dnsav") , FileMode.Open, FileAccess.Read, FileShare.ReadWrite));
     vars.old_save_1 = vars.old_reader_1.ReadLine();
-    vars.old_reader_2 = new StreamReader(new FileStream("C:/Program Files (x86)/Steam/steamapps/common/Nuclear Blaze/save/slot1.dnsav", FileMode.Open, FileAccess.Read, FileShare.ReadWrite));
+    vars.old_reader_2 = new StreamReader(new FileStream( (vars.saves_folder+"slot1.dnsav") , FileMode.Open, FileAccess.Read, FileShare.ReadWrite));
     vars.old_save_2 = vars.old_reader_2.ReadLine();
-    vars.old_reader_3 = new StreamReader(new FileStream("C:/Program Files (x86)/Steam/steamapps/common/Nuclear Blaze/save/slot2.dnsav", FileMode.Open, FileAccess.Read, FileShare.ReadWrite));
+    vars.old_reader_3 = new StreamReader(new FileStream( (vars.saves_folder+"slot2.dnsav") , FileMode.Open, FileAccess.Read, FileShare.ReadWrite));
     vars.old_save_3 = vars.old_reader_3.ReadLine();
 }
 
@@ -38,12 +40,13 @@ reset{
 update{
     
     //while the game is running we are reading the saves
-    vars.new_reader_1 = new StreamReader(new FileStream("C:/Program Files (x86)/Steam/steamapps/common/Nuclear Blaze/save/slot0.dnsav", FileMode.Open, FileAccess.Read, FileShare.ReadWrite));
+    vars.new_reader_1 = new StreamReader(new FileStream( (vars.saves_folder+"slot0.dnsav") , FileMode.Open, FileAccess.Read, FileShare.ReadWrite) );
     vars.new_save_1 = vars.new_reader_1.ReadLine();
-    vars.new_reader_2 = new StreamReader(new FileStream("C:/Program Files (x86)/Steam/steamapps/common/Nuclear Blaze/save/slot1.dnsav", FileMode.Open, FileAccess.Read, FileShare.ReadWrite));
+    vars.new_reader_2 = new StreamReader(new FileStream( (vars.saves_folder+"slot1.dnsav") , FileMode.Open, FileAccess.Read, FileShare.ReadWrite) );
     vars.new_save_2 = vars.new_reader_2.ReadLine();
-    vars.new_reader_3 = new StreamReader(new FileStream("C:/Program Files (x86)/Steam/steamapps/common/Nuclear Blaze/save/slot2.dnsav", FileMode.Open, FileAccess.Read, FileShare.ReadWrite));
+    vars.new_reader_3 = new StreamReader(new FileStream( (vars.saves_folder+"slot2.dnsav") , FileMode.Open, FileAccess.Read, FileShare.ReadWrite));
     vars.new_save_3 = vars.new_reader_3.ReadLine();
+    print( vars.saves_folder    );
 
  
 }
