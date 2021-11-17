@@ -67,6 +67,8 @@ init
     vars.levelId = "Intro_forest";
     vars.old_levelId = "Intro_forest";
     vars.current_save_id = -1;
+
+    vars.settings_reader = new StreamReader(new FileStream(vars.saves_folder+"settings.dnsav", FileMode.Open, FileAccess.Read, FileShare.ReadWrite));
 }
 
 //always running
@@ -80,7 +82,23 @@ start{
 
     vars.levelId = "Intro_forest";
     vars.old_levelId = "Intro_forest";
-    vars.current_save_id = -1;
+
+    vars.settings_reader.DiscardBufferedData();
+    vars.settings_reader.BaseStream.Seek(0, System.IO.SeekOrigin.Begin);
+    while (!vars.settings_reader.EndOfStream) {
+        var line = vars.settings_reader.ReadLine();
+        if (line.Contains("curSaveSlot")) {
+            var start_pos = line.IndexOf(":") + 1;
+            var end_pos = line.IndexOf(",");
+            var curSaveSlotStr = line.Substring(start_pos, end_pos - start_pos);
+            var old_save_id = vars.current_save_id;
+            vars.current_save_id = Int32.Parse(curSaveSlotStr);
+            if (!vars.current_save_id.Equals(old_save_id)) {
+                print("Current save id found: " + vars.current_save_id.ToString());
+            }
+            break;
+        }
+    }
 
     return old.frame_timer == 0 && current.frame_timer > 0;
 }
@@ -94,21 +112,6 @@ reset{
 //always running
 update{
     //while the game is running we are reading the saves
-    if (vars.current_save_id == -1) {
-        for(var i = 0; i < 3; i++) 
-        {
-            // Discard buffered data and seek to the start of the stream before reading it
-            vars.save_reader[i].DiscardBufferedData();
-            vars.save_reader[i].BaseStream.Seek(0, System.IO.SeekOrigin.Begin);
-            vars.new_save[i] = vars.save_reader[i].ReadLine();
-
-            if (vars.old_save[i] != vars.new_save[i]) {
-                vars.current_save_id = i;
-                print("Current save id found: " + vars.current_save_id.ToString());
-            }
-        }
-    }
-
     if (vars.current_save_id != -1) {
         vars.old_save[vars.current_save_id] = vars.new_save[vars.current_save_id];
 
