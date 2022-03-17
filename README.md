@@ -9,6 +9,7 @@ To download the autosplitter manually, go [here](https://raw.githubusercontent.c
 This autosplitter supports the following versions of Nuclear Blaze:
 
     Steam
+        1.5.0
         1.0.3
 
 If you wish to speedrun a non-Steam version of Nuclear Blaze, please get in touch with Evian on Discord (@Evian#6930) so that we can verify the autosplitter is functional for your version.

@@ -1,3 +1,10 @@
+
+state("NuclearBlaze","1.5.0")
+{
+    int frame_timer : "libhl.dll", 0x5D3F8, 0x9D8, 0x28, 0x30, 0xA8, 0x18, 0x140; //contains the timers in frames
+    int X_position : "libhl.dll", 0x5D3F8, 0xA00, 0x0, 0x30, 0xC8, 0xC8, 0x34 //contains X position of the player
+}
+
 state("NuclearBlaze","1.0.3")
 {
     int frame_timer : "libhl.dll", 0x55FF0, 0x9B8, 0x8, 0x30, 0x140; //contains the timers in frames
@@ -33,6 +40,11 @@ init
     switch(MD5Hash){
         case "A29F2A7945A11B5E25F3B563DF9ACA0E" :
             version = "1.0.3";
+            vars.LEVEL_ID_LABEL = "y7:levelId";
+            break;
+        case "E92C6C32C6CFBE6E20664E095303AEFE" :
+            version = "1.5.0";
+            vars.LEVEL_ID_LABEL = "y11:bestLevelId";
             break;
         default :
             version = "Unknown Version";
@@ -106,7 +118,7 @@ start{
 //always running 
 //when returning true, reset the timer
 reset{
-    return current.frame_timer == -1;
+    return current.frame_timer <= 0;
 }
 
 //always running
@@ -122,13 +134,14 @@ update{
 
         if (vars.old_save[vars.current_save_id] != vars.new_save[vars.current_save_id]) {
             // Read Nuclear Blaze save format
-            var LEVEL_ID_LABEL = "y7:levelId";
             var current_save = vars.new_save[vars.current_save_id];
-            int idx_lvlId_label = current_save.IndexOf(LEVEL_ID_LABEL);
+            int idx_lvlId_label = current_save.IndexOf(vars.LEVEL_ID_LABEL);
+            print("u " + current_save);
             if (idx_lvlId_label > -1) {
-                if(current_save[idx_lvlId_label + LEVEL_ID_LABEL.Length] != 'n') {
+                var at_lvlId_idx = current_save[idx_lvlId_label + vars.LEVEL_ID_LABEL.Length];
+                if(at_lvlId_idx != 'n') {
                     // +10 to skip the y7:levelId, +1 to skip the y
-                    var save_substring = current_save.Substring(idx_lvlId_label + LEVEL_ID_LABEL.Length + 1); 
+                    var save_substring = current_save.Substring(idx_lvlId_label + vars.LEVEL_ID_LABEL.Length + 1); 
                     // save_substring should look like this "12:Intro_foresty11:gameVersiony5:1.0.3y4:diffoy[...]"
                     var idx_lvlId_label_length = save_substring.IndexOf(":"); // in that example, should give us 2
                     var levelId_length_str = save_substring.Substring(0, idx_lvlId_label_length); // in that example, should give us "12"
