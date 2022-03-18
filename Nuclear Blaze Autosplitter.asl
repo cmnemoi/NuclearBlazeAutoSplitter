@@ -1,5 +1,11 @@
+state("NuclearBlaze","1.5.0 20220318144910")
+{
+    int frame_timer : "libhl.dll", 0x5D3F8, 0x9E0, 0x28, 0x30, 0xA8, 0x18, 0x140; //contains the timers in frames
+    int X_position : "libhl.dll", 0x5D3F8, 0xA08, 0x0, 0x30, 0xC8, 0xC8, 0x34; //contains X position of the player
+    int Y_position : "libhl.dll", 0x5D3F8, 0xA08, 0x0, 0x30, 0xC8, 0xC8, 0x38; //contains Y position of the player
+}
 
-state("NuclearBlaze","1.5.0")
+state("NuclearBlaze","1.5.0 20220316")
 {
     int frame_timer : "libhl.dll", 0x5D3F8, 0x9D8, 0x28, 0x30, 0xA8, 0x18, 0x140; //contains the timers in frames
     int X_position : "libhl.dll", 0x5D3F8, 0xA00, 0x0, 0x30, 0xC8, 0xC8, 0x34; //contains X position of the player
@@ -44,7 +50,10 @@ init
             version = "1.0.3";
             break;
         case "E92C6C32C6CFBE6E20664E095303AEFE" :
-            version = "1.5.0";
+            version = "1.5.0 20220316";
+            break;
+        case "1CF487B9DBAC1CA2113579A4F2FA5DF8" :
+            version = "1.5.0 20220318144910";
             break;
         default :
             version = "Unknown Version";
