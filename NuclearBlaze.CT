@@ -1,10 +1,9 @@
 <?xml version="1.0" encoding="utf-8"?>
-<CheatTable CheatEngineTableVersion="34">
+<CheatTable CheatEngineTableVersion="40">
   <CheatEntries>
     <CheatEntry>
       <ID>2</ID>
-      <Description>"X position in last screen"</Description>
-      <LastState Value="22" RealAddress="1E1A21B0C14"/>
+      <Description>"X position [1.0.3]"</Description>
       <ShowAsSigned>0</ShowAsSigned>
       <VariableType>4 Bytes</VariableType>
       <Address>"libhl.dll"+00055FF0</Address>
@@ -18,66 +17,8 @@
       </Offsets>
     </CheatEntry>
     <CheatEntry>
-      <ID>3</ID>
-      <Description>"X position in last screen 2"</Description>
-      <LastState Value="22" RealAddress="1E1A21B0C14"/>
-      <VariableType>4 Bytes</VariableType>
-      <Address>"libhl.dll"+00055FF0</Address>
-      <Offsets>
-        <Offset>34</Offset>
-        <Offset>C8</Offset>
-        <Offset>C8</Offset>
-        <Offset>30</Offset>
-        <Offset>8</Offset>
-        <Offset>9B8</Offset>
-      </Offsets>
-    </CheatEntry>
-    <CheatEntry>
-      <ID>4</ID>
-      <Description>"X position in last screen 3"</Description>
-      <LastState Value="22" RealAddress="1E1A21B0C14"/>
-      <VariableType>4 Bytes</VariableType>
-      <Address>"libhl.dll"+00055FF0</Address>
-      <Offsets>
-        <Offset>34</Offset>
-        <Offset>100</Offset>
-        <Offset>30</Offset>
-        <Offset>8</Offset>
-        <Offset>9B8</Offset>
-      </Offsets>
-    </CheatEntry>
-    <CheatEntry>
-      <ID>5</ID>
-      <Description>"X position in last screen 4"</Description>
-      <LastState Value="22" RealAddress="1E1A21B0C14"/>
-      <VariableType>4 Bytes</VariableType>
-      <Address>"libhl.dll"+00055FF0</Address>
-      <Offsets>
-        <Offset>34</Offset>
-        <Offset>100</Offset>
-        <Offset>30</Offset>
-        <Offset>0</Offset>
-        <Offset>9C0</Offset>
-      </Offsets>
-    </CheatEntry>
-    <CheatEntry>
-      <ID>6</ID>
-      <Description>"X position in last screen 5"</Description>
-      <LastState Value="22" RealAddress="1E1A21B0C14"/>
-      <VariableType>4 Bytes</VariableType>
-      <Address>"libhl.dll"+00055FF0</Address>
-      <Offsets>
-        <Offset>34</Offset>
-        <Offset>100</Offset>
-        <Offset>60</Offset>
-        <Offset>8</Offset>
-        <Offset>9B0</Offset>
-      </Offsets>
-    </CheatEntry>
-    <CheatEntry>
       <ID>7</ID>
-      <Description>"Timer (in frames)"</Description>
-      <LastState Value="16149" RealAddress="1E1AA341588"/>
+      <Description>"Timer (in frames) [1.0.3]"</Description>
       <ShowAsSigned>0</ShowAsSigned>
       <VariableType>4 Bytes</VariableType>
       <Address>"libhl.dll"+0x55FF0</Address>
@@ -86,6 +27,66 @@
         <Offset>0x30</Offset>
         <Offset>0x8</Offset>
         <Offset>0x9B8</Offset>
+      </Offsets>
+    </CheatEntry>
+    <CheatEntry>
+      <ID>8</ID>
+      <Description>"X position [1.5.0]"</Description>
+      <ShowAsSigned>0</ShowAsSigned>
+      <VariableType>4 Bytes</VariableType>
+      <Address>"libhl.dll"+0005D3F8</Address>
+      <Offsets>
+        <Offset>34</Offset>
+        <Offset>C8</Offset>
+        <Offset>C8</Offset>
+        <Offset>30</Offset>
+        <Offset>0</Offset>
+        <Offset>A00</Offset>
+      </Offsets>
+    </CheatEntry>
+    <CheatEntry>
+      <ID>10</ID>
+      <Description>"Y position [1.5.0]"</Description>
+      <ShowAsSigned>0</ShowAsSigned>
+      <VariableType>4 Bytes</VariableType>
+      <Address>"libhl.dll"+0005D3F8</Address>
+      <Offsets>
+        <Offset>38</Offset>
+        <Offset>C8</Offset>
+        <Offset>C8</Offset>
+        <Offset>30</Offset>
+        <Offset>0</Offset>
+        <Offset>A00</Offset>
+      </Offsets>
+    </CheatEntry>
+    <CheatEntry>
+      <ID>9</ID>
+      <Description>"Timer (in frames) [1.5.0]"</Description>
+      <ShowAsSigned>0</ShowAsSigned>
+      <VariableType>4 Bytes</VariableType>
+      <Address>"libhl.dll"+0005D3F8</Address>
+      <Offsets>
+        <Offset>140</Offset>
+        <Offset>18</Offset>
+        <Offset>A8</Offset>
+        <Offset>30</Offset>
+        <Offset>28</Offset>
+        <Offset>9D8</Offset>
+      </Offsets>
+    </CheatEntry>
+    <CheatEntry>
+      <ID>11</ID>
+      <Description>"Level Timer (in frames) [1.5.0]"</Description>
+      <ShowAsSigned>0</ShowAsSigned>
+      <VariableType>4 Bytes</VariableType>
+      <Address>"libhl.dll"+0005D3F8</Address>
+      <Offsets>
+        <Offset>144</Offset>
+        <Offset>18</Offset>
+        <Offset>A8</Offset>
+        <Offset>30</Offset>
+        <Offset>28</Offset>
+        <Offset>9D8</Offset>
       </Offsets>
     </CheatEntry>
   </CheatEntries>
