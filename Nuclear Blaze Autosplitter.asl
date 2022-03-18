@@ -2,13 +2,15 @@
 state("NuclearBlaze","1.5.0")
 {
     int frame_timer : "libhl.dll", 0x5D3F8, 0x9D8, 0x28, 0x30, 0xA8, 0x18, 0x140; //contains the timers in frames
-    int X_position : "libhl.dll", 0x5D3F8, 0xA00, 0x0, 0x30, 0xC8, 0xC8, 0x34 //contains X position of the player
+    int X_position : "libhl.dll", 0x5D3F8, 0xA00, 0x0, 0x30, 0xC8, 0xC8, 0x34; //contains X position of the player
+    int Y_position : "libhl.dll", 0x5D3F8, 0xA00, 0x0, 0x30, 0xC8, 0xC8, 0x38; //contains Y position of the player
 }
 
 state("NuclearBlaze","1.0.3")
 {
     int frame_timer : "libhl.dll", 0x55FF0, 0x9B8, 0x8, 0x30, 0x140; //contains the timers in frames
-    int X_position : "libhl.dll", 0x55FF0, 0x9C0, 0x0, 0x30, 0xC8, 0xC8, 0x34 //contains X position of the player
+    int X_position : "libhl.dll", 0x55FF0, 0x9C0, 0x0, 0x30, 0xC8, 0xC8, 0x34; //contains X position of the player
+    int Y_position : "libhl.dll", 0x55FF0, 0x9C0, 0x0, 0x30, 0xC8, 0xC8, 0x38; //contains Y position of the player
 }
 
 isLoading{
@@ -136,7 +138,7 @@ update{
             // Read Nuclear Blaze save format
             var current_save = vars.new_save[vars.current_save_id];
             int idx_lvlId_label = current_save.IndexOf(vars.LEVEL_ID_LABEL);
-            print("u " + current_save);
+            
             if (idx_lvlId_label > -1) {
                 var at_lvlId_idx = current_save[idx_lvlId_label + vars.LEVEL_ID_LABEL.Length];
                 if(at_lvlId_idx != 'n') {
@@ -171,12 +173,26 @@ split{
         return true;
     }
 
-    //if we are far enough in the right, it means we touched the final door
-    var touched_door = current.X_position > 24;
-
-    //if we are in the last level AND we are far enough in the right, we split (last split)
-    if (vars.levelId.Equals("Ending") && touched_door) {
-        print("SPLIT - Ending level id: " + vars.levelId.ToString() + ", touched door");
-        return true;
+    // Kill the chair ending check
+    if (vars.levelId.Equals("Ending")) {
+        //if we are far enough in the right, it means we touched the final door
+        var touched_door_X = current.X_position == 25;
+        var touched_door_Y = current.Y_position == 15;
+        
+        if (touched_door_X && touched_door_Y) {
+            print("SPLIT - Ending, touched door");
+            return true;
+        }
+    }
+    
+    // Ladder ending check
+    if (vars.levelId.Equals("Pumps_service_access")) {
+        var reached_ending_X = current.X_position == 39;
+        var reached_ending_Y = current.Y_position >= 7 && current.Y_position <= 9;
+        
+        if (reached_ending_X && reached_ending_Y) {
+            print("SPLIT - Ending, reached ladder ending");
+            return true;
+        }
     }
 }
