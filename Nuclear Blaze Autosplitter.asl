@@ -42,11 +42,9 @@ init
     switch(MD5Hash){
         case "A29F2A7945A11B5E25F3B563DF9ACA0E" :
             version = "1.0.3";
-            vars.LEVEL_ID_LABEL = "y7:levelId";
             break;
         case "E92C6C32C6CFBE6E20664E095303AEFE" :
             version = "1.5.0";
-            vars.LEVEL_ID_LABEL = "y11:bestLevelId";
             break;
         default :
             version = "Unknown Version";
@@ -136,14 +134,23 @@ update{
 
         if (vars.old_save[vars.current_save_id] != vars.new_save[vars.current_save_id]) {
             // Read Nuclear Blaze save format
+            var LEVEL_ID_LABEL = "y7:levelId";
+            var BEST_LEVEL_ID_LABEL = "y11:bestLevelId";
             var current_save = vars.new_save[vars.current_save_id];
-            int idx_lvlId_label = current_save.IndexOf(vars.LEVEL_ID_LABEL);
+            int idx_lvlId_label = current_save.IndexOf(LEVEL_ID_LABEL);
             
             if (idx_lvlId_label > -1) {
-                var at_lvlId_idx = current_save[idx_lvlId_label + vars.LEVEL_ID_LABEL.Length];
+                var at_lvlId_idx = current_save[idx_lvlId_label + LEVEL_ID_LABEL.Length];
+                var lvlId_Label_to_use = LEVEL_ID_LABEL;
+                if(at_lvlId_idx == 'R') { // Redirect to reading Best level id instead
+                    lvlId_Label_to_use = BEST_LEVEL_ID_LABEL;
+                    idx_lvlId_label = current_save.IndexOf(BEST_LEVEL_ID_LABEL);
+                    at_lvlId_idx = current_save[idx_lvlId_label + lvlId_Label_to_use.Length];
+                }
+
                 if(at_lvlId_idx != 'n') {
                     // +10 to skip the y7:levelId, +1 to skip the y
-                    var save_substring = current_save.Substring(idx_lvlId_label + vars.LEVEL_ID_LABEL.Length + 1); 
+                    var save_substring = current_save.Substring(idx_lvlId_label + lvlId_Label_to_use.Length + 1); 
                     // save_substring should look like this "12:Intro_foresty11:gameVersiony5:1.0.3y4:diffoy[...]"
                     var idx_lvlId_label_length = save_substring.IndexOf(":"); // in that example, should give us 2
                     var levelId_length_str = save_substring.Substring(0, idx_lvlId_label_length); // in that example, should give us "12"
