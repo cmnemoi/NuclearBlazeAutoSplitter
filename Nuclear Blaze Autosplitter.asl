@@ -192,8 +192,10 @@ split{
     // Kill the chair ending check
     if (vars.levelId.Equals("Ending")) {
         //if we are far enough in the right, it means we touched the final door
+        // Door pos in 1.0.3 = (25, 13)
+        //             1.5.0 = (25, 15)
         var touched_door_X = current.X_position == 25;
-        var touched_door_Y = current.Y_position == 15;
+        var touched_door_Y = current.Y_position >= 13 && current.Y_position <= 15;
         
         if (touched_door_X && touched_door_Y) {
             print("SPLIT - Ending, touched door");
